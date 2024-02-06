@@ -46,6 +46,7 @@ export const Product = styled("div", {
 		},
 
 		span: {
+			display: "block",
 			fontSize: "$xl",
 			fontWeight: "bold",
 			color: "$green300",
@@ -57,5 +58,22 @@ export const Product = styled("div", {
 			transform: "translateY(0%)",
 			opacity: 1,
 		},
+	},
+});
+
+export const ButtonIcon = styled("button", {
+	border: 0,
+	padding: "0.75rem",
+	borderRadius: 6,
+	backgroundColor: "$green500",
+	color: "$gray100",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	cursor: "pointer",
+	fontSize: "$xl",
+
+	"&:hover": {
+		backgroundColor: "$green300",
 	},
 });
