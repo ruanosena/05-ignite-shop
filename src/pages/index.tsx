@@ -6,11 +6,12 @@ import Head from "next/head";
 import { Handbag } from "@phosphor-icons/react";
 import { useKeenSlider } from "keen-slider/react";
 
+import { useShoppingCart } from "use-shopping-cart";
+import Stripe from "stripe";
 import { stripe } from "../lib/stripe";
 import { ButtonIcon, HomeContainer, Product } from "../styles/pages/home";
 
 import "keen-slider/keen-slider.min.css";
-import Stripe from "stripe";
 
 interface HomeProps {
 	products: {
@@ -18,11 +19,23 @@ interface HomeProps {
 		name: string;
 		imageUrl: string;
 		price: string;
+		priceUnit: number;
 	}[];
 }
 
 export default function Home({ products }: HomeProps) {
 	const [sliderRef] = useKeenSlider({ slides: { perView: 3, spacing: 48 } });
+	const shoppingCart = useShoppingCart();
+
+	function handleAddProductToCart(product: HomeProps["products"][number]) {
+		shoppingCart.addItem({
+			id: product.id,
+			name: product.name,
+			price: product.priceUnit,
+			sku: "",
+			currency: "BRL",
+		});
+	}
 
 	return (
 		<>
@@ -40,7 +53,7 @@ export default function Home({ products }: HomeProps) {
 									<strong>{product.name}</strong>
 									<span>{product.price}</span>
 								</div>
-								<ButtonIcon>
+								<ButtonIcon onClick={() => handleAddProductToCart(product)}>
 									<Handbag />
 								</ButtonIcon>
 							</footer>
@@ -66,6 +79,7 @@ export const getStaticProps: GetStaticProps = async () => {
 			price: new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
 				price.unit_amount / 100
 			),
+			priceUnit: price.unit_amount,
 		};
 	});
 
